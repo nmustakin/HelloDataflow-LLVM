@@ -25,12 +25,12 @@ std::vector<int> v1 = {1, 2, 3, 4, 5};
 std::vector<int> v2 = {3, 4, 5, 6, 7}; 
 std::vector<int> dest1; // create a third vector to write results
 
-std::set_union(v1.begin(), v1.end(), v2.begin(), v2.end(),mstd::back_inserter(dest1)); // writes Union (v1+v2) to dest1
+std::set_union(v1.begin(), v1.end(), v2.begin(), v2.end(),std::back_inserter(dest1)); // writes Union (v1+v2) to dest1
 ```
 4. Similarly, intersection and difference operations can be performed. 
 ```cpp
-std::set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(),mstd::back_inserter(dest1)); // writes difference (v1-v2) to dest1
+std::set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(),std::back_inserter(dest1)); // writes difference (v1-v2) to dest1
 
-std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(),mstd::back_inserter(dest1)); // writes Common elements of both sets to dest1
+std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(),std::back_inserter(dest1)); // writes Common elements of both sets to dest1
 
 ``` 
