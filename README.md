@@ -2,8 +2,9 @@
 Getting started to write Dataflow analysis in LLVM. (Without standard templates)
 
 ## Code Guidelines for LLVM APIs
-1. See basic steps to access functions, basic blocks and instructions from [HelloDataflow-LLVM](https://github.com/ufarooq/HelloPass-LLVM/). 
-2. The following LLVM APIs might be helpful for implementing Dataflow Analysis. Assuming that you have a basic block and want to find out its successor(s), use the following snippet to iterate over its successors.
+1. See how to access functions, basic blocks, and instructions from [HelloDataflow-LLVM](https://github.com/ufarooq/HelloPass-LLVM/). 
+2. The following LLVM APIs might be helpful for implementing a dataflow analysis. 
+3. Given a basic block, to find out its successor(s), use the following snippet to iterate over its successors.
 ```cpp
 //#include "llvm/IR/CFG.h"
 
