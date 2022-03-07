@@ -158,17 +158,17 @@ void visitor(Function &F){
         for (BasicBlock *Succ : successors(top)) {
             
             set<string> dest1 = set<string>();
-            set<string>::iterator it; 
-            set_difference(LiveOut[Succ].begin(), LiveOut[Succ].end(), VarKill[Succ].begin(), VarKill[Succ].end(), dest1.begin());
-            //set_union(dest1.begin(), it, UEVar[Succ].begin(), UEVar[Succ].end(), dest1.begin());
-            //set_union(newLiveOut.begin(), newLiveOut.end(), dest1.begin(), dest1.end(), back_inserter(newLiveOut));
+
+            set_difference(LiveOut[Succ].begin(), LiveOut[Succ].end(), VarKill[Succ].begin(), VarKill[Succ].end(), inserter(dest1, dest1.end()));
+            set_union(dest1.begin(), dest1.end(), UEVar[Succ].begin(), UEVar[Succ].end(), inserter(dest1, dest1.end()));
+            set_union(newLiveOut.begin(), newLiveOut.end(), dest1.begin(), dest1.end(), inserter(newLiveOut,newLiveOut.end()));
         }
-        /*
+        
         if(newLiveOut!=LiveOut[top]){
             for (BasicBlock *Pred : predecessors(top)){
                 worklist.push(Pred);
             }
-        }*/
+        }
     }
 
 /*
