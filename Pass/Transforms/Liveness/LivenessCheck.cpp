@@ -38,7 +38,7 @@ void visitor(Function &F){
     // Here goes what you want to do with a pass
     
 	string func_name = "main";
-	errs() << "Liveness: " << F.getName() << "\n";
+	errs() << "Liveness: " << F.getName() << "\n\n";
 	    
 	    // Comment this line
         //if (F.getName() != func_name) return;
@@ -60,7 +60,7 @@ void visitor(Function &F){
 
         StringRef bbName(basic_block.getName());
         
-        errs() << bbName  << ":\n";
+        //errs() << bbName  << ":\n";
             
         for (auto& inst : basic_block){
 
@@ -143,13 +143,11 @@ void visitor(Function &F){
             
         } // end for inst
         
-        errs() << "UEVAR: ";
-        printHashTable(UEVar[&basic_block]); 
-        errs() << "VARKILL: ";
-        printHashTable(VarKill[&basic_block]);
-        errs() <<"\n";
+        
         
     } // end for block
+
+    
 
     while(!worklist.empty()){
         BasicBlock* top = worklist.front();
@@ -158,30 +156,35 @@ void visitor(Function &F){
         for (BasicBlock *Succ : successors(top)) {
             
             set<string> dest1 = set<string>();
+            set<string> dest2 = set<string>();
 
             set_difference(LiveOut[Succ].begin(), LiveOut[Succ].end(), VarKill[Succ].begin(), VarKill[Succ].end(), inserter(dest1, dest1.end()));
-            set_union(dest1.begin(), dest1.end(), UEVar[Succ].begin(), UEVar[Succ].end(), inserter(dest1, dest1.end()));
-            set_union(newLiveOut.begin(), newLiveOut.end(), dest1.begin(), dest1.end(), inserter(newLiveOut,newLiveOut.end()));
+            set_union(dest1.begin(), dest1.end(), UEVar[Succ].begin(), UEVar[Succ].end(), inserter(dest2, dest2.end()));
+            set_union(newLiveOut.begin(), newLiveOut.end(), dest2.begin(), dest2.end(), inserter(newLiveOut,newLiveOut.end()));
         }
         
         if(newLiveOut!=LiveOut[top]){
+            LiveOut[top]= newLiveOut;
             for (BasicBlock *Pred : predecessors(top)){
                 worklist.push(Pred);
             }
         }
     }
 
-/*
-    errs() << "LIVEOUT:\n";
-    for (auto& basic_block : LiveOut)
-    {
-        StringRef bbName(basic_block->getName());
+    for (auto& basic_block : F){
+        StringRef bbName(basic_block.getName());
         
-        errs() << "Basic Block: "<< bbName  << ":\n";
+        errs() << "-----"<<bbName  << "-----\n";
+            
+        errs() << "UEVAR: ";
+        printHashTable(UEVar[&basic_block]); 
+        errs() << "VARKILL: ";
+        printHashTable(VarKill[&basic_block]);
+        errs() << "LiveOut: ";
+        printHashTable(LiveOut[&basic_block]);
+        errs() <<"\n";
 
-        printHashTable(LiveOut[basic_block]);
     }
-    */
     
 }
 
