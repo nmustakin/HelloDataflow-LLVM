@@ -17,7 +17,7 @@ using namespace llvm;
 
 namespace {
 
-void printHashTable(set<string>  s){
+void printSet(set<string>  s){
 
     set<string>::iterator itr;
     
@@ -46,8 +46,7 @@ void visitor(Function &F){
     blockset UEVar; 
     blockset VarKill;
     blockset LiveOut; 
-
-    unordered_map<Value*, string> variables;    
+  
     queue<BasicBlock*> worklist = queue<BasicBlock*>();
     
     for (auto& basic_block : F){
@@ -64,21 +63,6 @@ void visitor(Function &F){
             
         for (auto& inst : basic_block){
 
-            if(inst.getOpcode() == Instruction::Load){
-                    // errs() << "This is Load"<<"\n";
-
-                variables[&inst] = inst.getOperand(0)->getName().str();                 
-            }
-
-            if (inst.isBinaryOp())
-            {   
-                auto* ptr = dyn_cast<User>(&inst);
-		    	
-                for (auto it = ptr->op_begin(); it != ptr->op_end(); ++it) {
-                    
-                }
-  
-            } 
             if(inst.getOpcode() == Instruction::Store || ((StringRef)inst.getOpcodeName())== "icmp"){
 
                 int pick=1;
@@ -99,8 +83,9 @@ void visitor(Function &F){
                     else if(llvm::Instruction* instr = dyn_cast<Instruction>(inst.getOperand(p))){
                         //errs() << *instr << "\n";
                         if(instr->getOpcode() == Instruction::Load){
+                            
                             operand=(*(instr->getOperand(0))).getName().str();
-                            //errs() << "\t Load: " << operand << "\n";
+                            
                             if(VarKill[&basic_block].find(operand) == VarKill[&basic_block].end()){
                                 
                                 UEVar[&basic_block].insert(operand);
@@ -177,11 +162,11 @@ void visitor(Function &F){
         errs() << "-----"<<bbName  << "-----\n";
             
         errs() << "UEVAR: ";
-        printHashTable(UEVar[&basic_block]); 
+        printSet(UEVar[&basic_block]); 
         errs() << "VARKILL: ";
-        printHashTable(VarKill[&basic_block]);
+        printSet(VarKill[&basic_block]);
         errs() << "LiveOut: ";
-        printHashTable(LiveOut[&basic_block]);
+        printSet(LiveOut[&basic_block]);
         errs() <<"\n";
 
     }
